@@ -5,6 +5,13 @@ const app = express();
 
 app.use(express.json());
 
+app.use((req, res, next) => {
+  req.user = {
+    _id: "682fba7118310c4d45ad6d17",
+  };
+  next();
+});
+
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
   .then(() => {
