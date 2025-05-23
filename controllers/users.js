@@ -4,7 +4,10 @@ const { BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = require("../utils/errors");
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => res.status(SERVER_ERROR).send({ message: "Server error" }));
+    .catch((err) => {
+      console.error(err);
+      res.status(SERVER_ERROR).send({ message: "Server error" });
+    });
 };
 
 module.exports.getUser = (req, res) => {
