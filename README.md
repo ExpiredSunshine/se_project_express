@@ -1,17 +1,33 @@
 # WTWR (What to Wear?): Back End
 
-## Description & Functionality
+The WTWR Back End provides a RESTful API for the What to Wear? application. It enables the following features:
 
-The WTWR Back End provides a RESTful API for the What to Wear? application. It enables clients to:
+- **User management**
 
-- Create, retrieve, and manage user profiles (name and avatar URL).
-- Create, retrieve, update, and delete clothing items with associated weather categories.
-- Allow users to like or unlike clothing items.
-- Handle errors with standardized HTTP status codes.
+  - Sign up new users with `name`, `avatar` (URL), `email`, and `password`
+  - Sign in existing users to receive a JSON Web Token (JWT)
+  - Retrieve the current user’s profile (`GET /users/me`)
+  - Update the current user’s `name` and `avatar` (`PATCH /users/me`)
+
+- **Clothing items**
+
+  - List all clothing items (`GET /items`)
+  - Create a new clothing item (protected; `POST /items`) with `name`, `weather` (`hot` | `warm` | `cold`), `imageUrl` (URL), and ownership set to the authenticated user
+  - Delete an item only if the authenticated user is its owner (`DELETE /items/:itemId`)
+  - Like an item (`PUT /items/:itemId/likes`) and unlike an item (`DELETE /items/:itemId/likes`)
+
+- **Authorization & validation**
+  - All protected routes require a valid JWT in the `Authorization: Bearer <token>` header
+  - Passwords are hashed with bcrypt before storage; stored hashes are never returned to the client
+  - `email`, `avatar`, and `imageUrl` fields are validated with the validator package
+  - Robust error handling with appropriate HTTP status codes (400, 401, 403, 404, 409, 500)
 
 ## Technologies & Techniques Used
 
-- **Node.js & Express.js**: Frameworks for building the API server and routing.
-- **MongoDB & Mongoose**: NoSQL database and Object Data Modeling for defining schemas and interacting with the database.
-- **validator**: Library used to validate that avatar and imageUrl fields contain valid URLs.
-- **ESLint (Airbnb Style) & Prettier**: Linting and code formatting tools to enforce consistent, high-quality code style.
+- **Node.js & Express.js**: Server runtime and API routing
+- **MongoDB & Mongoose**: NoSQL database and ODM for schema definitions and queries
+- **bcryptjs**: Password hashing
+- **jsonwebtoken**: Signing and verifying JWTs for stateless authentication
+- **validator**: Ensures `avatar`, `imageUrl`, and `email` fields are valid
+- **CORS**: Allows cross-origin requests from the front end
+- **ESLint (Airbnb Style) & Prettier**: Linting and formatting for consistent, high-quality code style
