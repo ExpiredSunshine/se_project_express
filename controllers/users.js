@@ -43,6 +43,11 @@ module.exports.createUser = (req, res) => {
 
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    return res
+      .status(BAD_REQUEST)
+      .send({ message: "The password and email fields are required" });
+  }
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -50,10 +55,13 @@ module.exports.login = (req, res) => {
       });
       return res.status(200).send({ token });
     })
-    .catch(() => {
-      return res
-        .status(UNAUTHORIZED)
-        .send({ message: "Incorrect email or password" });
+    .catch((err) => {
+      if (err.message === "Incorrect email or password") {
+        return res
+          .status(UNAUTHORIZED)
+          .send({ message: "Incorrect email or password" });
+      }
+      return res.status(SERVER_ERROR).send({ message: "Server error" });
     });
 };
 
@@ -98,6 +106,6 @@ module.exports.updateUserProfile = (req, res, next) => {
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: "Invalid user ID" });
       }
-      return next(err);
+      return res.status(SERVER_ERROR).send({ message: "Server error" });
     });
 };
