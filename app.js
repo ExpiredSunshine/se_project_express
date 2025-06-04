@@ -1,15 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const { NOT_FOUND } = require("./utils/errors");
+const { NOT_FOUND } = require("./utils/errors.js");
 
-const { createUser, login } = require("./controllers/users");
-const { getItems } = require("./controllers/items");
+const { createUser, login } = require("./controllers/users.js");
+const { getItems } = require("./controllers/items.js");
 
-const usersRouter = require("./routes/users");
-const itemsRouter = require("./routes/items");
+const usersRouter = require("./routes/users.js");
+const itemsRouter = require("./routes/items.js");
 
-const auth = require("./middlewares/auth");
+const auth = require("./middlewares/auth.js");
 
 const { PORT = 3001 } = process.env;
 

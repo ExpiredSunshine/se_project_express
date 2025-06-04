@@ -5,7 +5,7 @@ const {
   deleteClothingItem,
   likeClothingItem,
   unlikeClothingItem,
-} = require("../controllers/items");
+} = require("../controllers/items.js");
 
 router.get("/", getItems);
 

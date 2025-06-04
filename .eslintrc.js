@@ -16,11 +16,20 @@ module.exports = {
       },
     },
   ],
+  settings: {
+    "import/resolver": {
+      node: {
+        extensions: [".js"],
+      },
+    },
+  },
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
   },
   rules: {
     "no-underscore-dangle": ["error", { allow: ["_id"] }],
+    "import/extensions": ["error", "ignorePackages"],
+    "no-console": ["warn"],
   },
 };

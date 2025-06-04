@@ -1,10 +1,10 @@
-const ClothingItem = require("../models/clothingItem");
+const ClothingItem = require("../models/clothingItem.js");
 const {
   BAD_REQUEST,
   NOT_FOUND,
   FORBIDDEN,
   SERVER_ERROR,
-} = require("../utils/errors");
+} = require("../utils/errors.js");
 
 module.exports.getItems = (req, res) => {
   ClothingItem.find({})
