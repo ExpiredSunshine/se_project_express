@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { UNAUTHORIZED = 401 } = require("../utils/errors");
+
 const { JWT_SECRET = "some_super_secret_key" } = process.env;
 
 module.exports = (req, res, next) => {
@@ -15,5 +16,5 @@ module.exports = (req, res, next) => {
     return res.status(UNAUTHORIZED).send({ message: "Authorization required" });
   }
   req.user = payload;
-  next();
+  return next();
 };

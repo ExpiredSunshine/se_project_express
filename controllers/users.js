@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../models/user.js");
+const User = require("../models/user");
+
 const {
   BAD_REQUEST,
   NOT_FOUND,
@@ -8,6 +9,7 @@ const {
   UNAUTHORIZED,
   SERVER_ERROR,
 } = require("../utils/errors");
+
 const { JWT_SECRET = "some_super_secret_key" } = process.env;
 
 module.exports.createUser = (req, res) => {
@@ -65,7 +67,7 @@ module.exports.login = (req, res) => {
     });
 };
 
-module.exports.getCurrentUser = (req, res, next) => {
+module.exports.getCurrentUser = (req, res) => {
   const userId = req.user._id;
   User.findById(userId)
     .then((user) => {
@@ -78,11 +80,11 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: "Invalid user ID" });
       }
-      return next(err);
+      return res.status(SERVER_ERROR).send({ message: "Server error" });
     });
 };
 
-module.exports.updateUserProfile = (req, res, next) => {
+module.exports.updateUserProfile = (req, res) => {
   const userId = req.user._id;
   const { name, avatar } = req.body;
   User.findByIdAndUpdate(
