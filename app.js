@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const { NOT_FOUND } = require("./utils/errors.js");
 
 const { createUser, login } = require("./controllers/users.js");
 const { getItems } = require("./controllers/items.js");
@@ -10,6 +9,7 @@ const usersRouter = require("./routes/users.js");
 const itemsRouter = require("./routes/items.js");
 
 const auth = require("./middlewares/auth.js");
+const errorHandler = require("./middlewares/error-handler.js");
 
 const { PORT = 3001 } = process.env;
 
@@ -28,8 +28,11 @@ app.use("/users", usersRouter);
 app.use("/items", itemsRouter);
 
 app.use((req, res) => {
-  res.status(NOT_FOUND).send({ message: "Requested resource not found" });
+  res.status(404).send({ message: "Requested resource not found" });
 });
+
+// Add error handling middleware AFTER all other middleware and routes
+app.use(errorHandler);
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")

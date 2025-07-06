@@ -3,16 +3,15 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user.js");
 
 const {
-  BAD_REQUEST,
-  NOT_FOUND,
-  CONFLICT,
-  UNAUTHORIZED,
-  SERVER_ERROR,
-} = require("../utils/errors.js");
+  BadRequestError,
+  UnauthorizedError,
+  ConflictError,
+  NotFoundError,
+} = require("../utils/error-classes");
 
 const { JWT_SECRET = "some_super_secret_key" } = process.env;
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
   bcrypt
     .hash(password, 10)
@@ -31,24 +30,23 @@ module.exports.createUser = (req, res) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        return res.status(CONFLICT).send({ message: "Email already exists" });
-      }
-      if (err.name === "ValidationError") {
+        next(new ConflictError("Email already exists"));
+      } else if (err.name === "ValidationError") {
         const messages = Object.values(err.errors)
           .map((e) => e.message)
           .join(", ");
-        return res.status(BAD_REQUEST).send({ message: messages });
+        next(new BadRequestError(messages));
+      } else {
+        next(err);
       }
-      return res.status(SERVER_ERROR).send({ message: "Server error" });
     });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res
-      .status(BAD_REQUEST)
-      .send({ message: "The password and email fields are required" });
+    next(new BadRequestError("The password and email fields are required"));
+    return;
   }
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -59,32 +57,33 @@ module.exports.login = (req, res) => {
     })
     .catch((err) => {
       if (err.message === "Incorrect email or password") {
-        return res
-          .status(UNAUTHORIZED)
-          .send({ message: "Incorrect email or password" });
+        next(new UnauthorizedError("Incorrect email or password"));
+      } else {
+        next(err);
       }
-      return res.status(SERVER_ERROR).send({ message: "Server error" });
     });
 };
 
-module.exports.getCurrentUser = (req, res) => {
+module.exports.getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        return res.status(NOT_FOUND).send({ message: "User not found" });
+        next(new NotFoundError("User not found"));
+        return;
       }
       return res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid user ID" });
+        next(new BadRequestError("Invalid user ID"));
+      } else {
+        next(err);
       }
-      return res.status(SERVER_ERROR).send({ message: "Server error" });
     });
 };
 
-module.exports.updateUserProfile = (req, res) => {
+module.exports.updateUserProfile = (req, res, next) => {
   const userId = req.user._id;
   const { name, avatar } = req.body;
   User.findByIdAndUpdate(
@@ -94,7 +93,8 @@ module.exports.updateUserProfile = (req, res) => {
   )
     .then((updatedUser) => {
       if (!updatedUser) {
-        return res.status(NOT_FOUND).send({ message: "User not found" });
+        next(new NotFoundError("User not found"));
+        return;
       }
       return res.status(200).send({ data: updatedUser });
     })
@@ -103,11 +103,11 @@ module.exports.updateUserProfile = (req, res) => {
         const messages = Object.values(err.errors)
           .map((e) => e.message)
           .join(", ");
-        return res.status(BAD_REQUEST).send({ message: messages });
+        next(new BadRequestError(messages));
+      } else if (err.name === "CastError") {
+        next(new BadRequestError("Invalid user ID"));
+      } else {
+        next(err);
       }
-      if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid user ID" });
-      }
-      return res.status(SERVER_ERROR).send({ message: "Server error" });
     });
 };
