@@ -12,6 +12,7 @@ const itemsRouter = require("./routes/items.js");
 const auth = require("./middlewares/auth.js");
 const errorHandler = require("./middlewares/error-handler.js");
 const { validateUserBody, validateLoginBody } = require("./middlewares/validation.js");
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3001 } = process.env;
 
@@ -19,6 +20,9 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Enable request logging before all route handlers
+app.use(requestLogger);
 
 app.post("/signup", validateUserBody, createUser);
 app.post("/signin", validateLoginBody, login);
@@ -32,6 +36,9 @@ app.use("/items", itemsRouter);
 app.use((req, res) => {
   res.status(404).send({ message: "Requested resource not found" });
 });
+
+// Enable error logging after routes but before error handlers
+app.use(errorLogger);
 
 // celebrate error handler
 app.use(errors());
