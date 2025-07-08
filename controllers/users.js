@@ -7,7 +7,7 @@ const {
   UnauthorizedError,
   ConflictError,
   NotFoundError,
-} = require("../utils/error-classes");
+} = require("../utils/error-classes.js");
 
 const { JWT_SECRET = "some_super_secret_key" } = process.env;
 
