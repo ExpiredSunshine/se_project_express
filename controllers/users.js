@@ -9,7 +9,7 @@ const {
   NotFoundError,
 } = require("../utils/error-classes.js");
 
-const { JWT_SECRET = "some_super_secret_key" } = process.env;
+const { JWT_SECRET } = require("../config");
 
 module.exports.createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
