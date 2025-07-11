@@ -25,6 +25,12 @@ app.use(express.json());
 // Enable request logging before all route handlers
 app.use(requestLogger);
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Server will crash now');
+  }, 0);
+});
+
 app.post("/signup", validateUserBody, createUser);
 app.post("/signin", validateLoginBody, login);
 app.get("/items", getItems);
