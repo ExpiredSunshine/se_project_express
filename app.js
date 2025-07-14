@@ -9,12 +9,17 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { NotFoundError } = require('./utils/error-classes');
 const apiLimiter = require('./middlewares/rateLimiter');
 
+const helmet = require('helmet');
+
 const { PORT = 3001 } = process.env;
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+const helmet = require('helmet');
+app.use(helmet());
 
 // Enable request logging before all route handlers
 app.use(requestLogger);
