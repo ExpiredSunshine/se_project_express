@@ -16,10 +16,8 @@ const { PORT = 3001 } = process.env;
 const app = express();
 
 app.use(cors());
-app.use(express.json());
-
-const helmet = require('helmet');
 app.use(helmet());
+app.use(express.json());
 
 // Enable request logging before all route handlers
 app.use(requestLogger);
