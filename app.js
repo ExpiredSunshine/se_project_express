@@ -14,6 +14,7 @@ const auth = require("./middlewares/auth");
 const errorHandler = require("./middlewares/error-handler");
 const { validateUserBody, validateLoginBody } = require("./middlewares/validation");
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { NotFoundError } = require('./utils/error-classes');
 
 const { PORT = 3001 } = process.env;
 
@@ -40,8 +41,8 @@ app.use(auth);
 app.use("/users", usersRouter);
 app.use("/items", itemsRouter);
 
-app.use((req, res) => {
-  res.status(404).send({ message: "Requested resource not found" });
+app.use((req, res, next) => {
+  next(new NotFoundError('Requested resource not found'));
 });
 
 // Enable error logging after routes but before error handlers
