@@ -12,11 +12,7 @@ const errorHandler = (err, req, res, next) => {
   console.error(err);
 
   // Handle custom errors
-  if (err instanceof BadRequestError ||
-      err instanceof UnauthorizedError ||
-      err instanceof ForbiddenError ||
-      err instanceof NotFoundError ||
-      err instanceof ConflictError) {
+  if (err.statusCode) {
     return res.status(err.statusCode).send({ message: err.message });
   }
 
