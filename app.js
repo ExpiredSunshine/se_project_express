@@ -4,12 +4,11 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const { errors } = require("celebrate");
 
+const helmet = require('helmet');
 const errorHandler = require("./middlewares/error-handler");
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { NotFoundError } = require('./utils/error-classes');
 const apiLimiter = require('./middlewares/rateLimiter');
-
-const helmet = require('helmet');
 
 const { PORT = 3001 } = process.env;
 
