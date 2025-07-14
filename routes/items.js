@@ -5,8 +5,8 @@ const {
   deleteClothingItem,
   likeClothingItem,
   unlikeClothingItem,
-} = require("../controllers/items.js");
-const { validateCardBody, validateId } = require("../middlewares/validation.js");
+} = require("../controllers/items");
+const { validateCardBody, validateId } = require("../middlewares/validation");
 
 router.get("/", getItems);
 

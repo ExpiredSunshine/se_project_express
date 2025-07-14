@@ -1,4 +1,4 @@
-const ClothingItem = require("../models/clothingItem.js");
+const ClothingItem = require("../models/clothingItem");
 const {
   BadRequestError,
   NotFoundError,
@@ -40,12 +40,10 @@ module.exports.deleteClothingItem = (req, res, next) => {
   ClothingItem.findById(itemId)
     .then((item) => {
       if (!item) {
-        next(new NotFoundError("Clothing item not found."));
-        return;
+        return next(new NotFoundError("Clothing item not found."));
       }
       if (item.owner.toString() !== userId) {
-        next(new ForbiddenError("Not authorized to delete this item."));
-        return;
+        return next(new ForbiddenError("Not authorized to delete this item."));
       }
       return ClothingItem.findByIdAndDelete(itemId).then(() => {
         res.send({ data: item });

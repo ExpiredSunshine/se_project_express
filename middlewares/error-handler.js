@@ -1,11 +1,4 @@
 // middlewares/error-handler.js
-const {
-  BadRequestError,
-  UnauthorizedError,
-  ForbiddenError,
-  NotFoundError,
-  ConflictError,
-} = require('../utils/error-classes');
 
 const errorHandler = (err, req, res, next) => {
   // Log the error

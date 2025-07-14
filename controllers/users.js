@@ -1,13 +1,13 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../models/user.js");
+const User = require("../models/user");
 
 const {
   BadRequestError,
   UnauthorizedError,
   ConflictError,
   NotFoundError,
-} = require("../utils/error-classes.js");
+} = require("../utils/error-classes");
 
 const { JWT_SECRET } = require("../config");
 
@@ -45,8 +45,7 @@ module.exports.createUser = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    next(new BadRequestError("The password and email fields are required"));
-    return;
+    return next(new BadRequestError("The password and email fields are required"));
   }
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -69,8 +68,7 @@ module.exports.getCurrentUser = (req, res, next) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        next(new NotFoundError("User not found"));
-        return;
+        return next(new NotFoundError("User not found"));
       }
       return res.status(200).send({ data: user });
     })
@@ -93,8 +91,7 @@ module.exports.updateUserProfile = (req, res, next) => {
   )
     .then((updatedUser) => {
       if (!updatedUser) {
-        next(new NotFoundError("User not found"));
-        return;
+        return next(new NotFoundError("User not found"));
       }
       return res.status(200).send({ data: updatedUser });
     })

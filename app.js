@@ -4,15 +4,15 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const { errors } = require("celebrate");
 
-const { createUser, login } = require("./controllers/users.js");
-const { getItems } = require("./controllers/items.js");
+const { createUser, login } = require("./controllers/users");
+const { getItems } = require("./controllers/items");
 
-const usersRouter = require("./routes/users.js");
-const itemsRouter = require("./routes/items.js");
+const usersRouter = require("./routes/users");
+const itemsRouter = require("./routes/items");
 
-const auth = require("./middlewares/auth.js");
-const errorHandler = require("./middlewares/error-handler.js");
-const { validateUserBody, validateLoginBody } = require("./middlewares/validation.js");
+const auth = require("./middlewares/auth");
+const errorHandler = require("./middlewares/error-handler");
+const { validateUserBody, validateLoginBody } = require("./middlewares/validation");
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3001 } = process.env;
