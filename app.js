@@ -4,15 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const { errors } = require("celebrate");
 
-const { createUser, login } = require("./controllers/users");
-const { getItems } = require("./controllers/items");
-
-const usersRouter = require("./routes/users");
-const itemsRouter = require("./routes/items");
-
-const auth = require("./middlewares/auth");
 const errorHandler = require("./middlewares/error-handler");
-const { validateUserBody, validateLoginBody } = require("./middlewares/validation");
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { NotFoundError } = require('./utils/error-classes');
 
@@ -32,14 +24,8 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.post("/signup", validateUserBody, createUser);
-app.post("/signin", validateLoginBody, login);
-app.get("/items", getItems);
-
-app.use(auth);
-
-app.use("/users", usersRouter);
-app.use("/items", itemsRouter);
+// Set up all routes
+require('./routes')(app);
 
 app.use((req, res, next) => {
   next(new NotFoundError('Requested resource not found'));
