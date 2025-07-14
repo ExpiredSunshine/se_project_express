@@ -7,6 +7,7 @@ const { errors } = require("celebrate");
 const errorHandler = require("./middlewares/error-handler");
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { NotFoundError } = require('./utils/error-classes');
+const apiLimiter = require('./middlewares/rateLimiter');
 
 const { PORT = 3001 } = process.env;
 
@@ -17,6 +18,9 @@ app.use(express.json());
 
 // Enable request logging before all route handlers
 app.use(requestLogger);
+
+// Apply rate limiting
+app.use(apiLimiter);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
