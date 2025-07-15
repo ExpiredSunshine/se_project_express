@@ -1,14 +1,11 @@
 const router = require("express").Router();
 const {
-  getItems,
   createClothingItem,
   deleteClothingItem,
   likeClothingItem,
   unlikeClothingItem,
 } = require("../controllers/items");
 const { validateCardBody, validateId } = require("../middlewares/validation");
-
-router.get("/", getItems);
 
 router.post("/", validateCardBody, createClothingItem);
 router.delete("/:itemId", validateId, deleteClothingItem);
