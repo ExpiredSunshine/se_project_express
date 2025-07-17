@@ -33,7 +33,7 @@ The application is accessible via the following domains:
 
 ### API Endpoints
 - **Base URL**: `https://api.wtwrac.vlad.md`
-- **Crash Test**: `GET /crash-test` - Tests server crash recovery with PM2
+
 - **Items**: `GET /items` - List all clothing items
 - **User Management**: `/users/*` - User-related endpoints
 - **Authentication**: `/signin`, `/signup` - Authentication endpoints
